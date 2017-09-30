@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">GrizzHacks2Application</string>
+    <string name="button1">Push Button For Awesomeness</string>
+    <string name="textView_awesomeness">Awesomeness</string>
 </resources>

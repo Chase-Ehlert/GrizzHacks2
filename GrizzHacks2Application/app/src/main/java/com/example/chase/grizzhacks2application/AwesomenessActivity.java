@@ -3,18 +3,13 @@ package com.example.chase.grizzhacks2application;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 
-public class MainActivity extends AppCompatActivity {
+public class AwesomenessActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_awesomeness);
     }
 
-    public void button(View view) {
-        Intent intent = new Intent(this, AwesomenessActivity.class);
-        startActivity(intent);
-    }
 }
