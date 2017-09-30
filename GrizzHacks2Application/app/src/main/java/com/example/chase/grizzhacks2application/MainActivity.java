@@ -1,9 +1,7 @@
 package com.example.chase.grizzhacks2application;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.SurfaceView;
@@ -18,6 +16,7 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfRect;
 import org.opencv.imgproc.Imgproc;
 
 public class MainActivity extends AppCompatActivity implements CvCameraViewListener2 {
@@ -122,10 +121,4 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         return mRgba; // This function must return
     }
 
-
-
-    public void button(View view) {
-        Intent intent = new Intent(this, AwesomenessActivity.class);
-        startActivity(intent);
-    }
 }
