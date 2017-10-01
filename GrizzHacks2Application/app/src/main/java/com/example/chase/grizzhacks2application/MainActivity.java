@@ -21,6 +21,12 @@ import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 
 public class MainActivity extends AppCompatActivity implements CvCameraViewListener2 {
     // Used for logging success or failure messages
@@ -38,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     String eyes_cascade_name = "haarcascade_eye_tree_eyeglasses.xml";
     CascadeClassifier face_cascade;
     CascadeClassifier eyes_cascade;
+    File cascadeFile;
 
 
     // These variables are used (at the moment) to fix camera orientation from 270degree to 0degree
@@ -68,8 +75,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "called onCreate");
-        super.onCreate(savedInstanceState);
+         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         setContentView(R.layout.show_camera);
@@ -80,11 +86,38 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
         mOpenCvCameraView.setCvCameraViewListener(this);
 
-        face_cascade = new CascadeClassifier();
-        eyes_cascade = new CascadeClassifier();
+        try {
+            //String path = MainActivity.class.getResource("haarcascade_frontalface_default.xml").getPath().substring(1);
+            InputStream is = getResources().openRawResource(R.raw.haarcascade_frontalface_default);
+            File cascadeDir = getDir("cascade", MODE_PRIVATE);
+            cascadeFile = new File(cascadeDir, "haarcascade_frontalface_default.xml");
 
-        face_cascade.load( face_cascade_name );
-        eyes_cascade.load( eyes_cascade_name );
+            FileOutputStream os = new FileOutputStream(cascadeFile);
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = is.read(buffer)) != -1) {
+                os.write(buffer, 0, bytesRead);
+            }
+            is.close();
+            os.close();
+
+            String string = new String();
+
+            string = cascadeFile.getAbsolutePath();
+
+            face_cascade = new CascadeClassifier(string);
+        }
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+
+
+        }
+
+
+            //eyes_cascade = new CascadeClassifier();
+        //face_cascade.load( face_cascade_name );
+        //eyes_cascade.load( eyes_cascade_name );
 
     }
 
@@ -131,11 +164,11 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         // TODO Auto-generated method stub
         mRgba = inputFrame.rgba();
 
-        Mat frame_gray = inputFrame.gray();
-        MatOfRect faces = new MatOfRect();
+        //Mat frame_gray = inputFrame.gray();
+        //MatOfRect faces = new MatOfRect();
 
 
-        face_cascade.detectMultiScale(frame_gray, faces);
+        /*face_cascade.detectMultiScale(frame_gray, faces);
 
         Rect[] faces_array = faces.toArray();
 
@@ -145,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                 System.out.println("Face 1");
             if ( i == 2 )
                 System.out.println("Face 2");
-        }
+        }*/
 
         // Rotate mRgba 90 degrees
         Core.transpose(mRgba, mRgbaT);
