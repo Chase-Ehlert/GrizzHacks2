@@ -17,7 +17,10 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
+import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.objdetect.CascadeClassifier;
+
 
 public class MainActivity extends AppCompatActivity implements CvCameraViewListener2 {
     // Used for logging success or failure messages
@@ -29,6 +32,13 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     // Used in Camera selection from menu (when implemented)
     private boolean mIsJavaCamera = true;
     private MenuItem mItemSwitchCamera = null;
+
+    /** Global variables */
+    String face_cascade_name = "haarcascade_frontalface_alt.xml";
+    String eyes_cascade_name = "haarcascade_eye_tree_eyeglasses.xml";
+    CascadeClassifier face_cascade;
+    CascadeClassifier eyes_cascade;
+
 
     // These variables are used (at the moment) to fix camera orientation from 270degree to 0degree
     Mat mRgba;
@@ -69,6 +79,13 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
 
         mOpenCvCameraView.setCvCameraViewListener(this);
+
+        face_cascade = new CascadeClassifier();
+        eyes_cascade = new CascadeClassifier();
+
+        face_cascade.load( face_cascade_name );
+        eyes_cascade.load( eyes_cascade_name );
+
     }
 
     @Override
@@ -113,6 +130,23 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
         // TODO Auto-generated method stub
         mRgba = inputFrame.rgba();
+
+        Mat frame_gray = inputFrame.gray();
+        MatOfRect faces = new MatOfRect();
+
+
+        face_cascade.detectMultiScale(frame_gray, faces);
+
+        Rect[] faces_array = faces.toArray();
+
+        for(int i = 0; i < faces_array.length; i++)
+        {
+            if ( i == 1 )
+                System.out.println("Face 1");
+            if ( i == 2 )
+                System.out.println("Face 2");
+        }
+
         // Rotate mRgba 90 degrees
         Core.transpose(mRgba, mRgbaT);
         Imgproc.resize(mRgbaT, mRgbaF, mRgbaF.size(), 0,0, 0);
